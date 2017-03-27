@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: selenium-service
+  name: selenium-service
+spec:
+  ports:
+  - name: selenium
+    port: 4444
+    targetPort: 4444
+  selector:
+    name: selenium

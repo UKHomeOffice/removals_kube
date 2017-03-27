@@ -1,0 +1,78 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api-ircbd
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        name: api-ircbd
+    spec:
+      containers:
+      - name: api-ircbd
+        image: quay.io/ukhomeofficedigital/removals-api:b4
+        ports:
+          - name: http
+            containerPort: 8000
+        env:
+        - name: DBNAME
+          value: removals
+        - name: DBUSER
+          value: root
+        - name: DBPASS
+          value: {{.DB_PASS}}
+        - name: DBHOST
+          value: mysql
+        - name: DBPORT
+          value: "3306"
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi
+      - name: proxy
+        image: quay.io/ukhomeofficedigital/nginx-proxy:v3.0.0
+        env:
+          - name: PROXY_SERVICE_HOST
+            value: '127.0.0.1'
+          - name: PROXY_SERVICE_PORT
+            value: '8081'
+          - name: LOG_FORMAT_NAME
+            value: json
+          - name: NAXSI_USE_DEFAULT_RULES
+            value: 'FALSE'
+          - name: ENABLE_UUID_PARAM
+            value: 'HEADER'
+        ports:
+        - name: https
+          containerPort: 10443
+      - name: keycloak-proxy
+        image: quay.io/ukhomeofficedigital/go-keycloak-proxy:v2.0.3
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        env:
+          - name: PROXY_ENABLE_CORS_GLOBAL
+            value: 'true'
+        args:
+          - --client-id={{.KEYCLOAK_CLIENT_ID}}
+          - --client-secret={{.KEYCLOAK_CLIENT_SECRET}}
+          - --listen=127.0.0.1:8081
+          - --discovery-url={{.KEYCLOAK_DISCOVERY}}
+          - --upstream-url=http://127.0.0.1:8000
+          - --json-format
+          - --upstream-keepalives
+          - --cors-origins=https://{{.WALLBOARD_URL}}
+          - --enable-cors-global
+          - --resources=uri=/irc_entry|white-listed=true
+          - --resources=uri=/health|white-listed=true
+          - --resources=uri=/
+          - --enable-login-handler
+          - --log-requests
+          - --verbose
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081

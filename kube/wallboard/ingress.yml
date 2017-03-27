@@ -1,0 +1,21 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/secure-backends: "false"
+  name: wallboard-ircbd-ingress
+spec:
+  rules:
+  - host: {{.WALLBOARD_URL}}
+    http:
+      paths:
+      - backend:
+          serviceName: wallboard-ircbd-service
+          servicePort: http
+        path: /
+  tls:
+  - hosts:
+    - {{.WALLBOARD_URL}}
+    - www.{{.WALLBOARD_URL}}
+    secretName: external-tls

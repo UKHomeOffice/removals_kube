@@ -1,0 +1,26 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: quay.io/ukhomeofficedigital/mysql:v0.5.1
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: {{.DB_PASS}}
+        - name: MYSQL_DATABASE
+          value: removals
+        resources:
+          limits:
+            cpu: 400m
+            memory: 800Mi

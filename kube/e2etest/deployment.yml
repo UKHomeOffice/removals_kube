@@ -1,0 +1,31 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: selenium
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: selenium
+    spec:
+      containers:
+      - name: selenium
+        image: quay.io/ukhomeofficedigital/selenium-chrome:3.2.0-debug
+        ports:
+          - name: selenium
+            containerPort: 4444
+        env:
+        - name: TZ
+          value: UTC
+        - name: LANGUAGE
+          value: en_GB
+        - name: SCREEN_WIDTH
+          value: "1024"
+        - name: SCREEN_HEIGHT
+          value: "768"
+        - name: SCREEN_DEPTH
+          value: "24"
+        - name: DBUS_SESSION_BUS_ADDRESS
+          value: /dev/null

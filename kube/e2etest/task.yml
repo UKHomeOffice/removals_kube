@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: e2e-tests
+spec:
+  restartPolicy: Never
+  containers:
+  - name: e2e-tests
+    image: quay.io/ukhomeofficedigital/removals-e2etests:origin_master
+    command:
+      - ./test.sh
+    env:
+    - name: KEYCLOAK_USER
+      value: {{.KEYCLOAK_USER}}
+    - name: KEYCLOAK_PASS
+      value: {{.KEYCLOAK_PASS}}
+    - name: TZ
+      value: UTC
+    - name: SELENIUM_HOST
+      value: selenium-service
+    resources:
+      limits:
+        cpu: 250m
+        memory: 256Mi

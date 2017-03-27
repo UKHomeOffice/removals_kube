@@ -1,0 +1,31 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wallboard-ircbd
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        name: wallboard-ircbd
+    spec:
+      containers:
+      - name: wallboard-ircbd
+        image: quay.io/ukhomeofficedigital/removals-wallboard:origin_master
+        ports:
+          - name: http
+            containerPort: 8000
+        env:
+        - name: BACKEND
+          value: https://{{.API_URL}}
+        - name: KEYCLOAKURL
+          value: https://{{.KEYCLOAK_DISCOVERY}}
+        - name: CLIENTID
+          value: https://{{.KEYCLOAK_CLIENT_ID}}
+        - name: keycloakAccountService
+          value: https://{{.KEYCLOAK_DISCOVERY}}
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi
