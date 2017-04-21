@@ -7,7 +7,7 @@ spec:
   restartPolicy: Never
   containers:
   - name: api-schema
-    image: quay.io/ukhomeofficedigital/removals-api:b2
+    image: {{.API_IMAGE}}
     args:
       - run
       - migrations
@@ -15,15 +15,15 @@ spec:
     - name: LOG_LEVEL
       value: debug
     - name: DBNAME
-      value: removals
+      value: "{{.DBNAME}}"
     - name: DBUSER
-      value: root
+      value: "{{.DBUSER}}"
     - name: DBPASS
-      value: {{.DB_PASS}}
+      value: "{{.DBPASS}}"
     - name: DBHOST
-      value: mysql
+      value: "{{.DBHOST}}"
     - name: DBPORT
-      value: "3306"
+      value: "{{.DBPORT}}"
     resources:
       limits:
         cpu: 250m

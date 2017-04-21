@@ -108,13 +108,16 @@ if [ ${DEPLOY_WALLBOARD}  ]; then
   -f kube/wallboard/ingress.yml
 fi
 
-if [ $DRONE_DEPLOY_TO = "ephemeral" ]; then
-  kubectl delete namespace ${KUBE_NAMESPACE} --insecure-skip-tls-verify=true --server=${KUBE_SERVER} --token=${KUBE_TOKEN}
-fi
 
 
 if [ ${RUN_TESTS} ]; then
   kd \
   -f kube/e2etest/task.yml
+  kubectl --server=${KUBE_SERVER} --token=${KUBE_TOKEN} --namespace=${KUBE_NAMESPACE} get pods
+  kubectl --server=${KUBE_SERVER} --token=${KUBE_TOKEN} --namespace=${KUBE_NAMESPACE} attach api-schema
 # @TODO check the test results
+fi
+
+if [ $DRONE_DEPLOY_TO = "ephemeral" ]; then
+  kubectl delete namespace ${KUBE_NAMESPACE} --insecure-skip-tls-verify=true --server=${KUBE_SERVER} --token=${KUBE_TOKEN}
 fi
