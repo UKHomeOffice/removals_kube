@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
   - name: https
-    port: 10443
-    targetPort: 10443
+    port: 8081
+    targetPort: 8081
   selector:
     name: api-ircbd
