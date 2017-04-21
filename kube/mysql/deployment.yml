@@ -17,9 +17,9 @@ spec:
         - containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: {{.DB_PASS}}
+          value: {{.DBPASS}}
         - name: MYSQL_DATABASE
-          value: removals
+          value: {{.DBNAME}}
         resources:
           limits:
             cpu: 400m

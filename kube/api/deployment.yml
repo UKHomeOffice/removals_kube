@@ -12,21 +12,21 @@ spec:
     spec:
       containers:
       - name: api-ircbd
-        image: quay.io/ukhomeofficedigital/removals-api:b4
+        image: {{.API_IMAGE}}
         ports:
           - name: http
             containerPort: 8000
         env:
         - name: DBNAME
-          value: removals
+          value: "{{.DBNAME}}"
         - name: DBUSER
-          value: root
+          value: "{{.DBUSER}}"
         - name: DBPASS
-          value: {{.DB_PASS}}
+          value: "{{.DBPASS}}"
         - name: DBHOST
-          value: mysql
+          value: "{{.DBHOST}}"
         - name: DBPORT
-          value: "3306"
+          value: "{{.DBPORT}}"
         resources:
           limits:
             cpu: 250m

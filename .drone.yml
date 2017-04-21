@@ -1,0 +1,15 @@
+pipeline:
+
+  build:
+    image: docker:1.12
+    commands:
+      - echo done
+    when:
+      event: push
+
+  deploy:
+    image: quay.io/ukhomeofficedigital/kd:latest
+    commands:
+      - ./deploy.sh
+    when:
+      event: deployment
