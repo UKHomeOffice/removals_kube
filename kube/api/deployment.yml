@@ -43,7 +43,7 @@ spec:
         args:
           - --client-id={{.KEYCLOAK_CLIENT_ID}}
           - --client-secret={{.KEYCLOAK_CLIENT_SECRET}}
-          - --listen=127.0.0.1:8081
+          - --listen=0.0.0.0:8081
           - --discovery-url={{.KEYCLOAK_DISCOVERY}}
           - --upstream-url=http://127.0.0.1:8000
           - --json-format
