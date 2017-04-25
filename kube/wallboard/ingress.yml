@@ -12,10 +12,10 @@ spec:
       paths:
       - backend:
           serviceName: wallboard-ircbd-service
-          servicePort: http
+          servicePort: 8000
         path: /
   tls:
   - hosts:
     - {{.WALLBOARD_URL}}
     - www.{{.WALLBOARD_URL}}
-    secretName: external-tls
+    secretName: external-twls

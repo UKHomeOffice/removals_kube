@@ -17,8 +17,8 @@ RANDOM_STRING=$(head /dev/urandom | tr -dc a-z0-9 | head -c 13)
 
 
 ### --- DEFAULT SETTINGS --- ###
-export API_URL=api-ircbd-${DRONE_DEPLOY_TO}.notprod.homeoffice.gov.uk
-export WALLBOARD_URL=wallboard-ircbd-${DRONE_DEPLOY_TO}.notprod.homeoffice.gov.uk
+export API_URL=api-ibm-${DRONE_DEPLOY_TO}.notprod.homeoffice.gov.uk
+export WALLBOARD_URL=wallboard-ibm-${DRONE_DEPLOY_TO}.notprod.homeoffice.gov.uk
 
 
 
