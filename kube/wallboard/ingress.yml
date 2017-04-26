@@ -4,6 +4,7 @@ kind: Ingress
 metadata:
   annotations:
     ingress.kubernetes.io/secure-backends: "false"
+    ingress.kubernetes.io/whitelist-source-range: "{{.IP_WHITELIST}}"
   name: wallboard-ircbd-ingress
 spec:
   rules:

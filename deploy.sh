@@ -74,6 +74,15 @@ if [ $WHAT = wallboard ]; then
 fi
 
 
+## IP whitelist filtering
+wget -O whitelist.txt https://my.pingdom.com/probes/ipv4
+set +e
+kubectl --server=${KUBE_SERVER} --token=${KUBE_TOKEN} --namespace=${KUBE_NAMESPACE} get secret ipwhitelist -o="go-template={{index .data \"ipwhitelist.txt\"}}" | base64 -D | grep -v "#" >> whitelist.txt
+set -e
+sed -i '' '/^\s*$/d' whitelist.txt
+sed -i '' -e ':a' -e 'N' -e '$!ba' -e 's/\n/\/32, /g' -e '/^\s*$/d' whitelist.txt
+export IP_WHITELIST=$(cat whitelist.txt)/32
+
 if [ ${DEPLOY_API} ]; then
   if [ -z ${API_IMAGE} ]; then
     if [ $(wget -sq https://quay.io/c1/squash/ukhomeofficedigital/removals-integration/${BRANCH_SAFE}) ]; then
