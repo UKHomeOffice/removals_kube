@@ -77,10 +77,9 @@ fi
 ## IP whitelist filtering
 wget -O whitelist.txt https://my.pingdom.com/probes/ipv4
 set +e
-kubectl --server=${KUBE_SERVER} --token=${KUBE_TOKEN} --namespace=${KUBE_NAMESPACE} get secret ipwhitelist -o="go-template={{index .data \"ipwhitelist.txt\"}}" | base64 -D | grep -v "#" >> whitelist.txt
+kubectl --insecure-skip-tls-verify=true --server=${KUBE_SERVER} --token=${KUBE_TOKEN} --namespace=${KUBE_NAMESPACE} get secret ipwhitelist -o="go-template={{index .data \"ipwhitelist.txt\"}}" | base64 -d | grep -v "#" >> whitelist.txt
+cat whitelist.txt | sed -e '/^\s*$/d'  -e ':a' -e 'N' -e '$!ba' -e 's/\n/\/32, /g' -e '/^\s*$/d'  > whitelist.txt
 set -e
-sed -i '' '/^\s*$/d' whitelist.txt
-sed -i '' -e ':a' -e 'N' -e '$!ba' -e 's/\n/\/32, /g' -e '/^\s*$/d' whitelist.txt
 export IP_WHITELIST=$(cat whitelist.txt)/32
 
 if [ ${DEPLOY_API} ]; then
@@ -122,8 +121,8 @@ fi
 if [ ${RUN_TESTS} ]; then
   kd \
   -f kube/e2etest/task.yml
-  kubectl --server=${KUBE_SERVER} --token=${KUBE_TOKEN} --namespace=${KUBE_NAMESPACE} get pods
-  kubectl --server=${KUBE_SERVER} --token=${KUBE_TOKEN} --namespace=${KUBE_NAMESPACE} attach api-schema
+  kubectl --insecure-skip-tls-verify=true --server=${KUBE_SERVER} --token=${KUBE_TOKEN} --namespace=${KUBE_NAMESPACE} get pods
+  kubectl --insecure-skip-tls-verify=true --server=${KUBE_SERVER} --token=${KUBE_TOKEN} --namespace=${KUBE_NAMESPACE} attach api-schema
 # @TODO check the test results
 fi
 
